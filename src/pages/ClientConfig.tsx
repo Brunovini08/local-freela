@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input"
 import { useAuth } from "@/context/AuthContext"
 import { useEffect, useState } from "react"
 import type { ClientType } from "@/types/ClientType"
+import { toast } from "sonner"
+import { Link } from "react-router"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -48,18 +50,27 @@ export const ClientConfig = () => {
   })
 
   useEffect(() => {
-    userConfig.then((data) => {
+    userConfig().then((data) => {
       form.reset({
         name: data?.name ?? "",
         email: data?.email ?? "",
         phone: data?.tel ?? "",
         address: data?.address ?? "",
       })
+
+      setClient(data)
     })
   }, [userConfig])
 
+  console.log(client)
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    updateClient()
+    updateClient({...data, id: client?.id ?? "", auth_id: client?.auth_id ?? "", tel: data.phone})
+    .then(() => {
+      toast.success("Cliente atualizado com sucesso!")
+      window.location.href = "/"
+    }).catch(() => {
+      toast.error("Erro ao atualizar cliente.")
+    })
   }
 
   return (
@@ -115,7 +126,12 @@ export const ClientConfig = () => {
               </FormItem>
             )}
           />
+          <div className="flex justify-between">
           <Button type="submit">Salvar</Button>
+          <Button variant='destructive'>
+            <Link to="/">Cancelar</Link>
+          </Button>
+          </div>
         </div>
       </form>
     </Form>

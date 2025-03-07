@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Bell, Menu, Search, User, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -141,7 +141,10 @@ export function Navbar() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full" aria-label="Perfil">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user?.user_metadata?.avatar_url} alt="Usuário" />
+                  <AvatarImage 
+                  src={user?.user_metadata?.avatar_url} 
+                  alt="Usuário"
+                  />
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>

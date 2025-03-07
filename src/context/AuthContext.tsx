@@ -1,5 +1,5 @@
 import type { User } from "@supabase/supabase-js";
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { supabase } from "../supabse-client"
 import type { ClientType } from "@/types/ClientType";
 import type { UserConfig } from "@/types/UserType";
@@ -7,10 +7,10 @@ interface AuthContextType {
   user: User | null;
   siginWithGoogle: () => void;
   signOut: () => void;
-  createUser: (dataUser: UserConfig) => Promise<any>;
-  selectUser: () => Promise<any>;
-  userConfig: Promise<ClientType | null>;
-  updateClient: (dataClient: ClientType) => Promise<any>;
+  createUser: (dataUser: UserConfig) => Promise<unknown>;
+  selectUser: () => Promise<unknown>;
+  userConfig: () => Promise<ClientType | null>;
+  updateClient: (dataClient: ClientType) => Promise<unknown>;
 }
 
 
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return data
   }, [user?.id])
 
-  const userConfig = useMemo(async (): Promise<ClientType | null> => {
+  const userConfig = useCallback(async (): Promise<ClientType | null> => {
     if (!user?.id) return null
     const { data, error } = await supabase.from("users").select("name, email, tel, address, id, auth_id").eq("auth_id", user.id).single()
     if (error || !data) {
@@ -100,15 +100,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [user?.id])
 
   const updateClient = async (dataClient: ClientType) => {
-    console.log(dataClient)
-    userConfig.then(async (dataInfo) => {
-      const { data, error } = await supabase.from("users").update(dataClient).eq("id", dataInfo?.id).single()
-      if (error) {
-        return error
-      }
-      return data
+    const { error } = await supabase.from("users").update({
+      name: dataClient.name,
+      email: dataClient.email,
+      tel: dataClient.tel,
+      address: dataClient.address
+    }).eq("id", dataClient.id)
+    if (error) {
+      return error
     }
-    )
   }
 
   return <AuthContext.Provider value={{ siginWithGoogle, signOut, user, createUser, selectUser, userConfig, updateClient }}>
