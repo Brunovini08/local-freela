@@ -11,9 +11,9 @@ export const CategoryProvider = ({ children}: { children: React.ReactNode }) => 
     const { data, error } = await supabase.from('categories').select('*')
     if (error) {
       console.error(error)
-      return
+      return undefined
     }
-    console.log(data)
+    return data
   }
 
   return (

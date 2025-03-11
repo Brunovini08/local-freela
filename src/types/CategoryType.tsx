@@ -1,3 +1,5 @@
+import type { Category } from "./Category";
+
 export interface CategoryContextType {
-  findCategories: () => Promise<unknown>
+  findCategories: () => Promise<Category[] | undefined>;
 }

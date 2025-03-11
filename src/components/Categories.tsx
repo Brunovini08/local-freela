@@ -1,15 +1,20 @@
 import { useCategory } from "@/hooks/useCategory"
+import type { Category } from "@/types/Category"
 import { useEffect, useState } from "react"
+import { Card } from "./ui/card"
 
 export const Categories = () => {
 
   const {findCategories} = useCategory()
-  const [categories, setCategories] = useState<string[]>([])
+  const [categoriesArray, setCategoriesArray] = useState<Category[]>([])
   useEffect(() => {
     findCategories()
-    .then((data) => {
-      return setCategories(data)
-  })}, [categories, findCategories])
+    .then((data: Category[] | undefined) => {
+      if (data) {
+        setCategoriesArray(data);
+      }
+    })
+  }, [findCategories])
 
 
   return(
@@ -25,8 +30,12 @@ export const Categories = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 py-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {categories.map((category) => (
-            <h1>{category}</h1>
+          {categoriesArray.map((category) => (
+            <div key={category.id} className="flex items-center justify-center">
+              <Card className="flex items-center justify-center p-4 space-y-2 w-70">
+                <p className="text-lg font-semibold">{category.name}</p>
+              </Card>
+            </div>
           ))}
         </div>
       </section>
