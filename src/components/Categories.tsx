@@ -1,8 +1,17 @@
-import { Link } from "react-router"
-import { Button } from "./ui/button"
-import { ArrowRight } from "lucide-react"
+import { useCategory } from "@/hooks/useCategory"
+import { useEffect, useState } from "react"
 
 export const Categories = () => {
+
+  const {findCategories} = useCategory()
+  const [categories, setCategories] = useState<string[]>([])
+  useEffect(() => {
+    findCategories()
+    .then((data) => {
+      return setCategories(data)
+  })}, [categories, findCategories])
+
+
   return(
     <section className="py-12 md:py-16">
         <div className="container px-4 md:px-6">
@@ -16,14 +25,9 @@ export const Categories = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 py-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-
-          <div className="flex justify-center">
-            <Button variant="outline" asChild>
-              <Link to="/categories" className="flex items-center gap-1">
-                Ver Todas as Categorias <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+          {categories.map((category) => (
+            <h1>{category}</h1>
+          ))}
         </div>
       </section>
   )

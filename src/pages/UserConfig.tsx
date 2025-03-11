@@ -1,5 +1,4 @@
 "use client"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -15,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Select } from "@radix-ui/react-select"
 import { SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useAuth } from "@/context/AuthContext"
+import { useAuth } from "@/hooks/useAuth"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -56,7 +55,8 @@ export const UserConfig = () => {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <div className="container mx-auto p-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-100">
         <FormField
           control={form.control}
           name="name"
@@ -130,6 +130,8 @@ export const UserConfig = () => {
         />
         <Button type="submit">Enviar</Button>
       </form>
+  
+      </div>  
     </Form>
   )
 }

@@ -13,7 +13,7 @@ import {
   FormLabel,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useAuth } from "@/context/AuthContext"
+import { useAuth } from "@/hooks/useAuth"
 import { useEffect, useState } from "react"
 import type { ClientType } from "@/types/ClientType"
 import { toast } from "sonner"
@@ -36,7 +36,7 @@ const formSchema = z.object({
 
 export const ClientConfig = () => {
 
-  const { userConfig, updateClient } = useAuth()
+  const { userConfig, updateClient, user} = useAuth()
   const [client, setClient] = useState<ClientType | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,24 +50,27 @@ export const ClientConfig = () => {
   })
 
   useEffect(() => {
-    userConfig().then((data) => {
-      form.reset({
-        name: data?.name ?? "",
-        email: data?.email ?? "",
-        phone: data?.tel ?? "",
-        address: data?.address ?? "",
+    if(user) {
+      userConfig().then((data) => {
+        form.reset({
+          name: data?.name ?? "",
+          email: data?.email ?? "",
+          phone: data?.tel ?? "",
+          address: data?.address ?? "",
+        })
+  
+        setClient(data)
       })
-
-      setClient(data)
-    })
+    } else {
+      window.location.href = "/home"
+    }
   }, [userConfig])
 
-  console.log(client)
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     updateClient({...data, id: client?.id ?? "", auth_id: client?.auth_id ?? "", tel: data.phone})
     .then(() => {
       toast.success("Cliente atualizado com sucesso!")
-      window.location.href = "/"
+      window.location.href = "/home"
     }).catch(() => {
       toast.error("Erro ao atualizar cliente.")
     })
