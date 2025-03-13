@@ -6,6 +6,7 @@ import { ClientConfig } from "@/pages/ClientConfig"
 import { Profile } from "@/pages/Profile"
 import { CategoriesPage } from "@/pages/CategoriesPage"
 import { CategoryPage } from "@/pages/CategoryPage"
+import AuthCallback from "@/utils/AuthCallback"
 
 export const Approuter = () => {
   return(
@@ -16,6 +17,7 @@ export const Approuter = () => {
       <Route path="/profile" element={<PrivateRoutes><Profile /></PrivateRoutes>} />
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/category/:id" element={<CategoryPage />} />
+      <Route path="/auth/callback" element={<AuthCallback />}/>
     </Routes>
   )
 }

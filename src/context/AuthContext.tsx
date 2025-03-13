@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const siginWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: { redirectTo: "http://localhost:5173/auth/callback" }
     });
 
     if (error) {
@@ -42,9 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    setTimeout(() => {
-      window.location.href = "/home";
-    }, 8000)
+    
   };
 
   const signOut = async () => {
@@ -121,7 +120,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const servicesClient = async () => {
-    const { data, error} = await supabase.from("order_service").select("service_id").eq("client_id", user?.id);
+    const { data, error } = await supabase.from("order_service").select("service_id").eq("client_id", user?.id);
     if (error) {
       console.error(error.message);
       return error;
@@ -130,9 +129,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider 
-    value={{ siginWithGoogle, signOut, user, createUser, selectUser, 
-    userConfig, updateClient, loading, servicesClient }}>
+    <AuthContext.Provider
+      value={{
+        siginWithGoogle, signOut, user, createUser, selectUser,
+        userConfig, updateClient, loading, servicesClient
+      }}>
       {loading ? <p>Carregando...</p> : children}
     </AuthContext.Provider>
   );
