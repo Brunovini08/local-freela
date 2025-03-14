@@ -26,8 +26,8 @@ export const CategoriesPage = () => {
         </p>
       </div>
 
-      <div className="flex justify-center p-10 w-507 mx-auto bg-white h-200">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="container flex justify-center p-10 w-507 mx-auto bg-white h-200">
+        <div className="container grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 ">
           {categories.map((category: Category) => {
             return (
               <Link to={`/category/${category.id}`} key={category.id}>

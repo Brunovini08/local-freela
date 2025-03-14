@@ -31,7 +31,7 @@ export const Categories = () => {
           </div>
         </div>
       </div>
-      <div className="grid py-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid py-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:space-y-2 lg:space-x-2">
         {categoriesArray.length > 8 ? categoriesArray.slice(0, 8).map((category: Category) => {
           return (
             <>
@@ -47,7 +47,7 @@ export const Categories = () => {
         }) : categoriesArray.map((category: Category) => {
           return (
             <Link to={`/category/${category.id}`} key={category.id}>
-              <Card className="cursor-pointer flex flex-col items-center justify-center w-100 h-20 p-4">  
+              <Card className="cursor-pointer flex flex-col items-center justify-center w-100 h-20 p-4 ">  
                 <h3 className="">{category?.name}</h3>
               </Card>
             </Link>

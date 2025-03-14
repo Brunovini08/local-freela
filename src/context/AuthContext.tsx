@@ -4,7 +4,8 @@ import { supabase } from "../supabse-client"
 import type { ClientType } from "@/types/ClientType";
 import type { UserConfig } from "@/types/UserType";
 import type { AuthContextType } from "@/types/AuthContextType";
-
+import { getCookie } from "@/utils/getCookie";
+import { destructCookie } from "@/utils/destructCookie";
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -12,15 +13,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const checkUser = async () => {
-      setLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      setLoading(false);
-    };
+    useEffect(() => {
+    const fetchUser = async () => {
+      const accessToken = getCookie("sb-access-token");
+      if(!accessToken) return;
+      const {data, error} = await supabase.auth.getUser(accessToken)
 
-    checkUser()
+      if(error) {
+        console.error(error.message);
+        return;
+      }
+      if(data?.user) {
+        setUser(data.user);
+      }
+    }
+    fetchUser();
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
@@ -48,6 +55,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    destructCookie("sb-access-token");
+    destructCookie("sb-refresh-token");
     window.location.href = "/";
   };
 

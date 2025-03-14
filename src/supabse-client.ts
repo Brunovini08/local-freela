@@ -6,7 +6,7 @@ const subaseKey = import.meta.env.VITE_API
 export const supabase = createClient(supabaseUrl, subaseKey, {
   auth: {
     persistSession: false,
-    autoRefreshToken: true,
+    autoRefreshToken: false,
     detectSessionInUrl: false
   }
 })
