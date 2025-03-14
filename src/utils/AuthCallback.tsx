@@ -16,7 +16,7 @@ const AuthCallback = () => {
       console.log('Refresh Token:', refreshToken)
       document.cookie = `sb-refresh-token=${refreshToken}; path=/; SameSite=Lax; `;
     }
-    window.location.replace('/home')
+    window.location.href = '/user-config'
   }, [])
   return <p>Autenticando...</p>
 }
